@@ -124,13 +124,13 @@ function header(title,desc){return `<button class="back" onclick="goDash()">← 
 function home(){if(pinGate())return;state.page="home";$("#footer").classList.add("hidden");app.innerHTML=`<section class="hero"><div class="eyebrow">Des repères et des outils au quotidien</div><h1>Bienvenue dans<br><span style="color:var(--accent)">Mosaïque</span></h1><p class="sub">Un espace personnalisable pour mieux comprendre ses besoins, suivre son quotidien et trouver des outils adaptés.</p></section><div class="grid"><button class="choice" onclick="beginSetup('child')"><span class="emoji">🧸</span><strong>Parent d'enfant</strong><small>Un espace pour accompagner votre enfant, votre adolescent et votre quotidien familial.</small></button><button class="choice" onclick="beginSetup('adult')"><span class="emoji">🌿</span><strong>Adulte</strong><small>Un espace personnel pour mieux comprendre vos besoins et trouver des repères.</small></button></div><div class="card section"><h3>Vos données restent sur cet appareil</h3><p class="muted">Les informations que vous saisissez sont enregistrées dans le navigateur de cet appareil. Elles ne sont envoyées ni à Léa Épineuse, ni à Mosaïque, ni à un tiers. Pensez à exporter régulièrement une sauvegarde : les données locales peuvent être perdues si vous effacez les données du navigateur ou changez d'appareil.</p><div class="field"><label>Vous avez déjà une sauvegarde Mosaïque ?</label><label class="quiet" style="display:inline-flex;padding:10px;border-radius:12px;cursor:pointer">Importer ma sauvegarde<input type="file" accept="application/json" onchange="importFirstBackup(event)" hidden></label><small id="backupStatus" class="muted">Vous pourrez aussi importer vos données plus tard dans les paramètres.</small></div></div><div class="card section"><h3>Installer Mosaïque sur iPhone</h3><p class="muted">Dans Safari, ouvrez le menu <b>Partager</b>, faites défiler puis choisissez <b>Sur l’écran d’accueil</b>, et validez avec <b>Ajouter</b>. Mosaïque apparaîtra comme une application sur votre écran d’accueil.</p></div><p class="note" style="margin-top:18px">Mosaïque est un outil de soutien et d'information. Il ne remplace pas un avis, un diagnostic ou un accompagnement par un professionnel.</p>`}
 function beginSetup(space){state.space=space;state.selected=[];state.personName="";state.personAge="";state.reminderChoice="no";state.setupStep=1;renderSetup()}
 function setupBack(){if(state.setupStep>1){state.setupStep--;renderSetup()}else home()}
-function renderSetup(){
+function setupPinChoiceMarkup(){return `<h2>Souhaitez-vous protéger cet espace avec un code ?</h2><p class="sub">C'est facultatif : vous pourrez utiliser Mosaïque avec ou sans code.</p><div class="grid"><button type="button" class="choice" id="pinChoiceNo" onclick="toggleSetupPin(false)"><span class="emoji">🔓</span><strong>Non, continuer sans code</strong></button><button type="button" class="choice" id="pinChoiceYes" onclick="toggleSetupPin(true)"><span class="emoji">🔒</span><strong>Oui, choisir un code</strong></button></div><div id="setupPinField" class="field hidden"><label for="setupPin">Choisissez un code à 4 chiffres</label><input id="setupPin" type="password" inputmode="numeric" maxlength="4" placeholder="••••"><small class="muted">Le code est un verrou d'accès simple sur cet appareil. Il ne chiffre pas les données.</small></div><p class="muted small">Sans code, l'espace s'ouvrira directement. Avec un code, Mosaïque le demandera à l'ouverture et lorsque vous revenez dans l'application.</p>`}function toggleSetupPin(enabled){const field=$("#setupPinField"),yes=$("#pinChoiceYes"),no=$("#pinChoiceNo");if(field)field.classList.toggle("hidden",!enabled);if(yes)yes.classList.toggle("selected",enabled);if(no)no.classList.toggle("selected",!enabled);if(!enabled&&$("#setupPin"))$("#setupPin").value=""}function renderSetup(){
  $("#footer").classList.add("hidden");
  const child=state.space==="child";
  const title=child?"Créer l'espace de votre enfant":"Créer votre espace adulte";
  let body="";
  if(state.setupStep===1){
-  body=child?`<div class="field"><label for="personName">Comment s'appelle votre enfant ?</label><input id="personName" maxlength="50" placeholder="Prénom de l'enfant" value="${esc(state.personName)}"></div><div class="field"><label>Souhaitez-vous protéger cet espace avec un code à 4 chiffres ? (facultatif)</label><input id="setupPin" type="password" inputmode="numeric" maxlength="4" placeholder="••••"><small class="muted">Le code est un verrou d'accès simple sur cet appareil. Il ne chiffre pas les données.</small></div>`:
+  body=child?`<div class="field"><label for="personName">Comment s'appelle votre enfant ?</label><input id="personName" maxlength="50" placeholder="Prénom de l'enfant" value="${esc(state.personName)}"></div>${setupPinChoiceMarkup() }`:
   `<div class="field"><label for="personName">Quel est votre nom ?</label><input id="personName" maxlength="50" placeholder="Votre prénom ou nom" value="${esc(state.personName)}"></div>`;
   body+=`<div class="card soft"><b>Vos informations restent privées</b><p class="muted">Tout ce que vous renseignez reste stocké dans le navigateur de cet appareil. Rien n'est transmis à Léa Épineuse, à Mosaïque ou à une autre personne. Vous gardez la possibilité d'exporter ou d'importer une sauvegarde.</p></div><div class="card"><b>Installer Mosaïque sur iPhone</b><p class="muted">Avec Safari : appuyez sur <b>Partager</b>, puis <b>Sur l’écran d’accueil</b>, et enfin <b>Ajouter</b>.</p></div>`;
  } else if(state.setupStep===2){
@@ -140,30 +140,32 @@ function renderSetup(){
  } else if(child && state.setupStep===4){
   body=`<h2>Souhaitez-vous recevoir un rappel ?</h2><p class="sub">Vous pourrez modifier ce choix plus tard.</p><div class="grid"><button class="choice ${state.reminderChoice==="yes"?"selected":""}" onclick="state.reminderChoice='yes';renderSetup()"><span class="emoji">🔔</span><strong>Oui, je souhaite un rappel</strong></button><button class="choice ${state.reminderChoice==="no"?"selected":""}" onclick="state.reminderChoice='no';renderSetup()"><span class="emoji">🔕</span><strong>Non, merci</strong></button></div><p class="muted small">Ce choix est enregistré dans vos préférences. Les notifications automatiques ne sont pas encore activées dans cette version de Mosaïque.</p>`;
  } else {
-  body=`<h2>Souhaitez-vous protéger votre espace avec un code à 4 chiffres ?</h2><div class="field"><label>Code (facultatif)</label><input id="setupPin" type="password" inputmode="numeric" maxlength="4" placeholder="••••"></div><p class="muted">Le code est un verrou d'accès simple sur cet appareil. Il ne chiffre pas les données.</p>`;
+  body=`${setupPinChoiceMarkup()}`;
  }
  const last=child?4:3;
  const buttonText=state.setupStep===last?"C'est parti !":"Suivant →";
  app.innerHTML=`<button class="back" onclick="setupBack()">← Retour</button><section class="hero"><div class="eyebrow">${child?"Espace parent":"Espace adulte"} · Étape ${state.setupStep}/${last}</div><h1>${title}</h1></section><div class="card">${body}<div class="row" style="margin-top:20px"><button onclick="nextSetup()">${buttonText}</button>${state.setupStep===2?`<button class="secondary" onclick="state.selected=[];nextSetup()">Continuer sans profil</button>`:""}</div></div>`;
 }
+ if((!child&&state.setupStep===last)||(child&&state.setupStep===1))toggleSetupPin(false);
 function nextSetup(){
  const child=state.space==="child",last=child?4:3;
  if(state.setupStep===1){
   const name=$("#personName")?.value.trim()||"";
   if(!name)return alert(child?"Indiquez le prénom de votre enfant pour continuer.":"Indiquez votre nom pour continuer.");
   state.personName=name;localStorage.setItem("mosaique_person_name",name);
-  const pin=$("#setupPin")?.value||"";
-  if(pin&&!/^\d{4}$/.test(pin))return alert("Le code doit contenir exactement quatre chiffres.");
-  if(pin){state.pin=pin;state.unlocked=true;state.lockOnOpen=true;localStorage.setItem("mosaique_pin",pin);localStorage.setItem("mosaique_lock_on_open","true");sessionStorage.setItem("mosaique_session_unlocked","1")}else{state.pin="";state.unlocked=true;localStorage.removeItem("mosaique_pin");sessionStorage.removeItem("mosaique_session_unlocked")}
+  const wantsPin=$("#pinChoiceYes")?.classList.contains("selected")||false;const pin=wantsPin?($("#setupPin")?.value||""):"";
+  if(wantsPin&&!/^\d{4}$/.test(pin))return alert("Choisissez un code composé exactement de quatre chiffres.");
+  if(wantsPin){state.pin=pin;state.unlocked=true;state.lockOnOpen=true;localStorage.setItem("mosaique_pin",pin);localStorage.setItem("mosaique_lock_on_open","true");sessionStorage.setItem("mosaique_session_unlocked","1")}else{state.pin="";state.unlocked=true;state.lockOnOpen=false;localStorage.removeItem("mosaique_pin");localStorage.setItem("mosaique_lock_on_open","false");sessionStorage.removeItem("mosaique_session_unlocked")}
  } else if(state.setupStep===3&&child){
   const age=$("#personAge").value;
   if(age===""||Number(age)<0||Number(age)>25)return alert("Indiquez un âge valide entre 0 et 25 ans.");
   state.personAge=age;localStorage.setItem("mosaique_person_age",age);
  } else if(state.setupStep===last){
   if(!child){
-   const pin=$("#setupPin")?.value||"";
-   if(pin&&!/^\d{4}$/.test(pin))return alert("Le code doit contenir exactement quatre chiffres.");
-   if(pin){state.pin=pin;state.unlocked=true;state.lockOnOpen=true;localStorage.setItem("mosaique_pin",pin);localStorage.setItem("mosaique_lock_on_open","true");sessionStorage.setItem("mosaique_session_unlocked","1")}else{state.pin="";state.unlocked=true;localStorage.removeItem("mosaique_pin");sessionStorage.removeItem("mosaique_session_unlocked")}
+   const wantsPin=$("#pinChoiceYes")?.classList.contains("selected")||false;
+   const pin=wantsPin?($("#setupPin")?.value||""):"";
+   if(wantsPin&&!/^\\d{4}$/.test(pin))return alert("Choisissez un code composé exactement de quatre chiffres.");
+   if(wantsPin){state.pin=pin;state.unlocked=true;state.lockOnOpen=true;localStorage.setItem("mosaique_pin",pin);localStorage.setItem("mosaique_lock_on_open","true");sessionStorage.setItem("mosaique_session_unlocked","1")}else{state.pin="";state.unlocked=true;state.lockOnOpen=false;localStorage.removeItem("mosaique_pin");localStorage.setItem("mosaique_lock_on_open","false");sessionStorage.removeItem("mosaique_session_unlocked")}
   }
   localStorage.setItem("mosaique_reminder",state.reminderChoice);
   dashboard();return;
