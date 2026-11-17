@@ -24,3 +24,7 @@ Après validation, recharger le site. Le service worker est passé à `mosaique-
 
 ## Données et sécurité
 Les données sont stockées localement dans le navigateur. Elles ne sont pas synchronisées entre appareils et peuvent être perdues si les données du navigateur sont effacées. Le code PIN à quatre chiffres est un verrou d'accès simple, pas un chiffrement. Ne pas y saisir de données cliniques ou identifiantes.
+
+
+## Propriété intellectuelle
+Mosaïque est une application conçue et développée par **Léa Épineuse**. © 2026 Léa Épineuse. Tous droits réservés. Toute reproduction, redistribution ou réutilisation substantielle de l'application ou de son contenu nécessite une autorisation préalable, sous réserve des exceptions prévues par la loi.
