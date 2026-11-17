@@ -1,0 +1,10 @@
+MOSAÏQUE — INSTALLATION
+
+1. Créez un dépôt GitHub nommé mosaique.
+2. Décompressez l'archive.
+3. Envoyez tous les fichiers et dossiers contenus dans mosaique_app à la racine du dépôt.
+4. Validez avec Commit changes.
+5. Dans Settings > Pages, choisissez Deploy from a branch, puis main et /(root).
+6. Cliquez sur Save. GitHub affichera l'adresse du site.
+
+Cette version est une base fonctionnelle. Le code à quatre chiffres est un verrou d'accès simple, pas un chiffrement. N'y saisissez pas de données cliniques ou identifiantes.
