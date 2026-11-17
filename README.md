@@ -1,18 +1,26 @@
-# Mosaïque
+# Mosaïque — version actuelle
 
 Application web progressive statique, prévue pour GitHub Pages.
 
-## Publication
-1. Créer un dépôt GitHub nommé `mosaique`.
-2. Déposer le contenu de ce dossier à la racine du dépôt.
-3. Settings → Pages → Deploy from a branch → `main` → `/(root)` → Save.
+## Publication / mise à jour
+Déposer **tous les fichiers de ce dossier à la racine** du dépôt GitHub, en remplaçant les fichiers existants :
+- `index.html`
+- `sw.js`
+- `manifest.webmanifest`
+- `icon-192.png` et `icon-512.png`
+- `NOTICE-ET-SECURITE.md`
+- `README.md`
+- `.nojekyll`
 
-## Fonctionnement actuel
-- Parcours en trois étapes : choix Enfants/Adultes, sélection de profils (multi-choix), tableau de bord transversal.
-- Fiches de psychoéducation adaptées aux profils sélectionnés.
-- Journaux émotionnels, sommeil, suivi personnel, préparation de rendez-vous, planning et outils.
-- Stockage local au navigateur, export/import JSON.
-- Code à quatre chiffres optionnel (verrou d'accès simple).
+Dans GitHub : Settings → Pages → Deploy from a branch → `main` → `/(root)`.
 
-## Limites importantes
-Le code PIN actuel n'est PAS un chiffrement. Les données locales ne sont pas synchronisées et peuvent être perdues si les données du navigateur sont effacées. Ne pas y saisir de données cliniques ou identifiantes avant audit de sécurité et de conformité. Cette version est une base fonctionnelle à compléter et à tester, pas une reproduction à l'identique de ParentsZen.
+Après validation, recharger le site. Le service worker est passé à `mosaique-v3` pour invalider l'ancien cache.
+
+## Rubriques incluses dans cette version
+- Bien-être : respiration guidée avec bulle animée et rythmes au choix, pause guidée avec minuteur, ancrage sensoriel 5-4-3-2-1.
+- Sommeil : échelle visuelle en six niveaux et historique sous forme de points colorés.
+- Gestion des émotions : choix visuel des émotions, curseur d'intensité et historique coloré.
+- Les autres rubriques et espaces présents dans la version précédente sont conservés.
+
+## Données et sécurité
+Les données sont stockées localement dans le navigateur. Elles ne sont pas synchronisées entre appareils et peuvent être perdues si les données du navigateur sont effacées. Le code PIN à quatre chiffres est un verrou d'accès simple, pas un chiffrement. Ne pas y saisir de données cliniques ou identifiantes.
