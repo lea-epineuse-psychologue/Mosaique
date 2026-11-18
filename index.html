@@ -172,7 +172,7 @@ function nextSetup(){
  }
  state.setupStep++;renderSetup();
 }
-function continueWithoutProfile(){state.selected=[];nextSetup();if(state.setupStep===2){state.setupStep=3;renderSetup()}}
+function continueWithoutProfile(){state.selected=[];state.personName="";state.personAge="";state.reminderChoice="no";localStorage.removeItem("mosaique_person_name");localStorage.removeItem("mosaique_person_age");localStorage.setItem("mosaique_reminder","no");state.pin="";state.unlocked=true;state.lockOnOpen=false;localStorage.removeItem("mosaique_pin");localStorage.setItem("mosaique_lock_on_open","false");sessionStorage.removeItem("mosaique_session_unlocked");dashboard()}
 function importFirstBackup(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const incoming=JSON.parse(r.result);if(!incoming||typeof incoming!=="object"||Array.isArray(incoming))throw new Error();state.records={...state.records,...incoming};save();$("#backupStatus").textContent="Sauvegarde importée sur cet appareil.";alert("Votre sauvegarde a bien été importée.")}catch{alert("Ce fichier ne semble pas être une sauvegarde Mosaïque valide.")}};r.readAsText(f)}
 function chooseSpace(s){beginSetup(s)}
 function renderProfiles(){state.setupStep=2;renderSetup()}
