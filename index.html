@@ -144,7 +144,7 @@ function setupPinChoiceMarkup(){return `<h2>Souhaitez-vous protéger cet espace 
  }
  const last=child?4:3;
  const buttonText=state.setupStep===last?"C'est parti !":"Suivant →";
- app.innerHTML=`<button class="back" onclick="setupBack()">← Retour</button><section class="hero"><div class="eyebrow">${child?"Espace parent":"Espace adulte"} · Étape ${state.setupStep}/${last}</div><h1>${title}</h1></section><div class="card">${body}<div class="row" style="margin-top:20px"><button onclick="nextSetup()">${buttonText}</button>${state.setupStep===2?`<button class="secondary" onclick="state.selected=[];nextSetup()">Continuer sans profil</button>`:""}</div></div>`;
+ app.innerHTML=`<button class="back" onclick="setupBack()">← Retour</button><section class="hero"><div class="eyebrow">${child?"Espace parent":"Espace adulte"} · Étape ${state.setupStep}/${last}</div><h1>${title}</h1></section><div class="card">${body}<div class="row" style="margin-top:20px"><button onclick="nextSetup()">${buttonText}</button>${state.setupStep===2?`<button class="secondary" onclick="state.selected=[];nextSetup()">Continuer sans profil</button>`:""}${state.setupStep===1?`<button class="secondary" onclick="continueWithoutProfile()">Continuer sans profil</button>`:""}</div></div>`;
  if((!child&&state.setupStep===last)||(child&&state.setupStep===1))toggleSetupPin(false);
 }
 function nextSetup(){
@@ -172,6 +172,7 @@ function nextSetup(){
  }
  state.setupStep++;renderSetup();
 }
+function continueWithoutProfile(){state.selected=[];nextSetup();if(state.setupStep===2){state.setupStep=3;renderSetup()}}
 function importFirstBackup(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const incoming=JSON.parse(r.result);if(!incoming||typeof incoming!=="object"||Array.isArray(incoming))throw new Error();state.records={...state.records,...incoming};save();$("#backupStatus").textContent="Sauvegarde importée sur cet appareil.";alert("Votre sauvegarde a bien été importée.")}catch{alert("Ce fichier ne semble pas être une sauvegarde Mosaïque valide.")}};r.readAsText(f)}
 function chooseSpace(s){beginSetup(s)}
 function renderProfiles(){state.setupStep=2;renderSetup()}
