@@ -115,7 +115,7 @@ const tailored={
 "Confiance en soi":[["Estime de soi et compétences","La confiance se construit aussi en identifiant ses réussites, ses efforts, ses besoins et ses ressources, sans se réduire à ses difficultés."]],
 "Autres difficultés":[["Partir de ses besoins","Décrire une situation concrète, son impact et ce qui aide constitue un premier repère pour choisir des stratégies adaptées."]]
 };
-let state={space:null,selected:[],page:"home",section:null,personName:localStorage.getItem("mosaique_person_name")||"",personAge:localStorage.getItem("mosaique_person_age")||"",reminderChoice:localStorage.getItem("mosaique_reminder")||"no",records:JSON.parse(localStorage.getItem("mosaique_records")||"{}"),pin:localStorage.getItem("mosaique_pin")||"",lockOnOpen:localStorage.getItem("mosaique_lock_on_open")!=="false",unlocked:!localStorage.getItem("mosaique_pin")||sessionStorage.getItem("mosaique_session_unlocked")==="1",setupStep:0};
+let state={space:null,selected:[],page:"home",section:null,personName:localStorage.getItem("mosaique_person_name")||"",personAge:localStorage.getItem("mosaique_person_age")||"",reminderChoice:localStorage.getItem("mosaique_reminder")||"no",records:(()=>{try{const v=JSON.parse(localStorage.getItem("mosaique_records")||"{}");return v&&typeof v==="object"&&!Array.isArray(v)?v:{}}catch(e){return {}}})(),pin:(()=>{try{return localStorage.getItem("mosaique_pin")||""}catch(e){return ""}})(),lockOnOpen:(()=>{try{return localStorage.getItem("mosaique_lock_on_open")!=="false"}catch(e){return false}})(),unlocked:(()=>{try{return !localStorage.getItem("mosaique_pin")||sessionStorage.getItem("mosaique_session_unlocked")==="1"}catch(e){return true}})(),setupStep:0};
 function save(){localStorage.setItem("mosaique_records",JSON.stringify(state.records))}
 function current(){return state.space==="child"?"enfant":"adulte"}
 function profileKey(){return current()+":"+(state.personName?state.personName.toLocaleLowerCase("fr-FR"):"legacy")+":"+state.selected.join("|")}
@@ -278,6 +278,6 @@ window.addEventListener("pageshow",()=>{
  if(state.pin&&state.lockOnOpen&&sessionStorage.getItem("mosaique_session_unlocked")!=="1"){state.unlocked=false;pinGate()}
 });
 
-home();
+try{home()}catch(error){console.error("Mosaïque – erreur au démarrage :",error);app.innerHTML=`<section class="hero"><h1>Bienvenue dans Mosaïque</h1><p class="sub">Un petit problème a empêché le chargement de l'accueil.</p><button onclick="location.reload()">Recharger Mosaïque</button></section>`}
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 </script></body></html>
