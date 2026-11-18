@@ -145,8 +145,8 @@ function setupPinChoiceMarkup(){return `<h2>Souhaitez-vous protéger cet espace 
  const last=child?4:3;
  const buttonText=state.setupStep===last?"C'est parti !":"Suivant →";
  app.innerHTML=`<button class="back" onclick="setupBack()">← Retour</button><section class="hero"><div class="eyebrow">${child?"Espace parent":"Espace adulte"} · Étape ${state.setupStep}/${last}</div><h1>${title}</h1></section><div class="card">${body}<div class="row" style="margin-top:20px"><button onclick="nextSetup()">${buttonText}</button>${state.setupStep===2?`<button class="secondary" onclick="state.selected=[];nextSetup()">Continuer sans profil</button>`:""}</div></div>`;
-}
  if((!child&&state.setupStep===last)||(child&&state.setupStep===1))toggleSetupPin(false);
+}
 function nextSetup(){
  const child=state.space==="child",last=child?4:3;
  if(state.setupStep===1){
